@@ -1,4 +1,4 @@
-import {T,mat,mesh,box,cyl,ring,texture,noiseTexture,tube,createStage,cameraAt,span,mix,initUI} from './core.js'
+import {T,mat,mesh,box,cyl,ring,texture,noiseTexture,tube,createStage,cameraAt,span,mix,initUI} from './core.js?v=composition-8'
 initUI()
 const s=createStage({background:'#e9e4d8',exposure:1.13}),{scene,camera}=s
 const product=new T.Group();scene.add(product);product.rotation.y=-.14
@@ -42,11 +42,11 @@ const ray=new T.Raycaster(),mouse=new T.Vector2();let hit=false
 s.canvas.addEventListener('pointermove',e=>{mouse.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(mouse,camera);hit=ray.intersectObject(disc).length>0;const cursor=document.querySelector('.cursor');cursor.classList.toggle('expanded',hit);cursor.textContent=hit?(playing?'STOP':'PLAY'):'';s.canvas.style.cursor=hit?'pointer':''})
 s.canvas.addEventListener('pointerleave',()=>{hit=false});s.canvas.addEventListener('click',()=>{if(hit)togglePlay()})
 document.querySelectorAll('[data-finish]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-finish]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));wood.color.set(b.dataset.color);document.querySelectorAll('[data-finish-name]').forEach(x=>x.textContent=b.dataset.finish);s.wake()}))
-const shots=[{p:0,pos:[6.6,7.2,10],target:[-2,.1,0],mobile:[11,12,16],mobileTarget:[0,3.6,0]},{p:.33,pos:[5.4,4.3,10],target:[2.8,1.1,0],mobile:[12,8,17],mobileTarget:[0,4.4,0]},{p:.67,pos:[-4.6,2.3,7],target:[-2,.5,0],mobile:[-9,6,15],mobileTarget:[0,3.8,0]},{p:1,pos:[5.3,5.8,8],target:[-2,.25,0],mobile:[10,10,16],mobileTarget:[0,3.6,0]}]
+const shots=[{p:0,pos:[7.4,10,11],target:[0,.8,0],frame:[.74,.58],mobile:[9,13,18],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:.33,pos:[5.7,7.9,11.8],target:[0,.8,0],frame:[.74,.58],mobile:[7,12,20],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:.67,pos:[3,4.4,11.6],target:[0,.8,0],frame:[.74,.58],mobile:[4,6.8,21],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:1,pos:[1.1,3.1,11.9],target:[0,.8,0],frame:[.74,.58],mobile:[1.8,5.2,21.5],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]}]
 s.update(({p,time,dt,mobile,pointer,activeMotion})=>{
  cameraAt(camera,p,shots,mobile,pointer)
- const explosion=span(p,.13,.3)*(1-span(p,.44,.61));record.position.y=axis[1]+explosion*2.5;platter.position.y=axis[1]+explosion*1.22;drive.position.y=axis[1]+explosion*.18;arm.position.y=.55+explosion*.55;lines.visible=explosion>.6
- product.rotation.y=-.14+Math.sin(p*Math.PI)*.4
+ const explosion=span(p,.13,.3)*(1-span(p,.44,.61));record.position.y=axis[1]+explosion*2.5;platter.position.y=axis[1]+explosion*1.22;drive.position.y=axis[1]+explosion*.18;arm.position.y=.55+explosion*.55;lines.visible=false
+ product.rotation.y=-.14
  if(activeMotion){rotation+=dt*(playing?3.49:.12);armPose=mix(armPose,playing?-.29:0,1-Math.exp(-dt*3))}else armPose=playing?-.29:0
  record.rotation.y=rotation;pivot.rotation.y=armPose;pivot.rotation.z=playing?0:-.035
  for(let i=0;i<soundRings.length;i++){const r=soundRings[i],q=(time*.15+i*.25)%1;r.scale.setScalar(2.3+q*4);r.material.opacity=(1-q)*.2*(playing?1:.25)*(1-explosion)}
