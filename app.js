@@ -29,7 +29,7 @@ box(.25,.12,.5,dark,pivot,[-.73,-.09,1.6],.025);box(.12,.11,.18,red,pivot,[-.77,
 box(.08,.18,.3,silver,product,[1.74,.65,.38],.02)
 const knob=cyl(.18,.09,silver,product,[2.34,.57,1.4]);ring(.14,.008,dark,product,[2.34,.62,1.4]);box(.04,.005,.07,red,product,[2.34,.626,1.3],.002)
 for(let i=0;i<4;i++)cyl(.035,.009,silver,product,[-2.63+i*.17,.527,1.68],.035,16)
-const badge=texture((c,w,h)=>{c.fillStyle='#272c26';c.fillRect(0,0,w,h);c.fillStyle='#d7cdb8';c.font='35px sans-serif';c.textAlign='center';c.fillText('A U R A L I S',w/2,75);c.font='18px sans-serif';c.fillText('AR — 01',w/2,115)},512,160)
+const badge=texture((c,w,h)=>{c.fillStyle='#272c26';c.fillRect(0,0,w,h);c.fillStyle='#d7cdb8';c.font='35px sans-serif';c.textAlign='center';c.fillText('A U R A L I S',w/2,75);c.font='18px sans-serif';c.fillText('AR / 01',w/2,115)},512,160)
 const badgePlane=mesh(new T.PlaneGeometry(1.13,.35),mat('#ffffff',.6,.1,{map:badge}),product,[1.65,.11,2.061]);badgePlane.castShadow=false
 const lines=new T.Group();product.add(lines);const lineMat=new T.LineBasicMaterial({color:'#ba6a47',transparent:true,opacity:.45})
 for(const y of [1.0,1.7,2.6]){const g=new T.BufferGeometry().setFromPoints([new T.Vector3(-2.65,y,.01),new T.Vector3(-3.5,y,.01),new T.Vector3(-3.8,y+.3,.01)]);lines.add(new T.Line(g,lineMat))}
