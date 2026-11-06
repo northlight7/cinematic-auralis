@@ -39,7 +39,11 @@ const pocket=box(3.62,.025,1.8,mat('#ffffff',.85,0,{map:sleevePocket}),sleeve,[0
 const soundRings=[];for(let i=0;i<4;i++){const m=mat('#b7734c',1,0,{transparent:true,opacity:.2});const r=ring(1,.006,m,scene,[0,-.375,0]);r.castShadow=false;soundRings.push(r)}
 let playing=false,rotation=0,armPose=0
 const playButtons=document.querySelectorAll('[data-play]')
-function togglePlay(){playing=!playing;playButtons.forEach(b=>{b.setAttribute('aria-pressed',String(playing));b.innerHTML=playing?'Stop the record <span>Ⅱ</span>':'Drop the needle <span>↗</span>'});document.querySelector('[data-record-state]').textContent=playing?'PLAYING · 33⅓ RPM':'READY · 33⅓ RPM';s.wake()}
+let playSeconds=0,playTimer=0
+const np=document.querySelector('#now-playing'),npTime=document.querySelector('#np-time')
+const fmtTime=(v)=>String(Math.floor(v/60)).padStart(2,'0')+':'+String(Math.floor(v%60)).padStart(2,'0')
+function runTransport(){clearInterval(playTimer);if(!playing)return;playTimer=setInterval(()=>{playSeconds+=1;npTime.textContent=fmtTime(playSeconds)},1000)}
+function togglePlay(){playing=!playing;playButtons.forEach(b=>{b.setAttribute('aria-pressed',String(playing));b.innerHTML=playing?'Stop the record <span>Ⅱ</span>':'Drop the needle <span>↗</span>'});document.querySelector('[data-record-state]').textContent=playing?'PLAYING · 33⅓ RPM':'READY · 33⅓ RPM';np.dataset.active=String(playing);runTransport();s.wake()}
 playButtons.forEach(b=>b.addEventListener('click',togglePlay))
 const ray=new T.Raycaster(),mouse=new T.Vector2();let hit=false,storyProgress=0,recordHover=0
 function overRecord(e){mouse.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(mouse,camera);return storyProgress>.82&&ray.intersectObject(disc).length>0}
