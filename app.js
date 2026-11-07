@@ -54,14 +54,17 @@ document.querySelectorAll('[data-finish]').forEach(b=>b.addEventListener('click'
 const shots=[{p:0,pos:[7.4,10,11],target:[0,.8,0],frame:[.74,.58],mobile:[9,13,18],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:.33,pos:[5.7,7.9,11.8],target:[0,.8,0],frame:[.74,.58],mobile:[7,12,20],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:.67,pos:[3,4.4,11.6],target:[0,.8,0],frame:[.74,.58],mobile:[4,6.8,21],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]},{p:1,pos:[1.1,3.1,11.9],target:[0,.8,0],frame:[.74,.58],mobile:[1.8,5.2,21.5],mobileTarget:[0,.8,0],mobileFrame:[.5,.77]}]
 s.update(({p,time,dt,mobile,activeMotion})=>{
  storyProgress=p;cameraAt(camera,p,shots,mobile)
- const pull=span(p,.015,.18),seat=span(p,.2,.39),putAside=span(p,.25,.46)
- record.position.set(axis[0],mix(2.3+pull*1.25,axis[1],seat),mix(-1.05-pull*.65,axis[2],seat));record.rotation.x=(1-seat)*1.08;record.position.y-=Math.cos(record.rotation.x)*.285*(1-seat);record.position.z-=Math.sin(record.rotation.x)*.285*(1-seat)
- sleeve.position.set(-.73-putAside*2,1.9-span(putAside,.6,1)*2.24,-1.2-putAside*4.2);sleeve.rotation.x=mix(1.08,0,putAside);pocket.position.y=mix(.38,.05,putAside)
+ const out=span(p,.03,.14),turn=span(p,.14,.34),seat=span(p,.34,.56)
+ // Jacket stands upright behind the deck. The disc leaves its plane, lifts clear, turns flat, then settles.
+ sleeve.position.set(-.73,1.5,-3.78);sleeve.rotation.set(Math.PI/2-.1,0,0);pocket.visible=false
+ record.rotation.x=mix(Math.PI/2,0,turn)
+ record.position.set(mix(-.73,axis[0],seat),mix(mix(1.9,2.4,out),axis[1],seat),mix(mix(-3.68,-.9,turn),axis[2],seat))
  platter.position.y=axis[1];drive.position.y=axis[1];arm.position.y=.55;product.rotation.y=-.14
  const demonstrate=span(p,.43,.51)*(1-span(p,.7,.8))
  if(activeMotion){if(playing)rotation+=dt*3.49;armPose=mix(armPose,playing?-.29:-.29*demonstrate,1-Math.exp(-dt*6));recordHover=mix(recordHover,hit?1:0,1-Math.exp(-dt*12))}else{armPose=playing?-.29:0;recordHover=0}
+ if(!window.__dbg)window.__dbg={product,platter,record,sleeve,axis};
  record.rotation.y=rotation+span(p,.43,.78)*Math.PI*6;pivot.rotation.y=armPose;pivot.rotation.z=mix(-.035,0,Math.max(demonstrate,playing?1:0))
  vinyl.emissive.set('#bd7146');vinyl.emissiveIntensity=recordHover*.11
  for(let i=0;i<soundRings.length;i++){const r=soundRings[i],q=(time*.28+i*.25)%1;r.scale.setScalar(2.3+q*3);r.material.opacity=(1-q)*.14*Math.max(demonstrate,playing?1:0)*seat}
- s.host.dataset.recordPose=[...record.position.toArray(),record.rotation.x].map(v=>v.toFixed(2)).join(',');s.host.dataset.ritual=seat<.99?(pull<.99?'withdrawing record':'lowering to spindle'):demonstrate>.1?'needle demonstration':'ready to play'
+ s.host.dataset.recordPose=[...record.position.toArray(),record.rotation.x].map(v=>v.toFixed(2)).join(',');s.host.dataset.ritual=seat<.99?(turn<.99?'raising the record':'lowering to spindle'):demonstrate>.1?'needle demonstration':'ready to play'
 })
